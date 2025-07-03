@@ -8,7 +8,7 @@ class Diskon extends Migration
 {
     public function up()
     {
-         $this->forge->addField([
+        $this->forge->addField([
             'id' => [
                 'type'           => 'INT',
                 'constraint'     => 11,
@@ -32,8 +32,14 @@ class Diskon extends Migration
                 'null' => true,
             ],
         ]);
+        
+        // Set primary key
         $this->forge->addKey('id', true);
+        
+        // Add unique key untuk tanggal agar tidak ada duplikasi tanggal
         $this->forge->addUniqueKey('tanggal');
+        
+        // Create table
         $this->forge->createTable('diskon');
     }
 

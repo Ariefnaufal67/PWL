@@ -48,6 +48,15 @@ $routes->get('profile', 'Home::profile', ['filter' => 'auth']);
 
 $routes->resource('api', ['controller' => 'apiController']);
 
+$routes->get('dashboard_toko', 'Home::dashboard_toko', ['filter' => 'auth']);
+
+$routes->group('diskon', ['filter' => 'auth'], function($routes) {
+    $routes->get('', 'DiskonController::index'); // List all discounts
+    $routes->post('store', 'DiskonController::store'); // Store new discount
+    $routes->post('update/(:any)', 'DiskonController::update/$1'); // Update discount
+    $routes->get('delete/(:any)', 'DiskonController::delete/$1'); // Delete discount
+});
+
 // $routes->get('keranjang', 'TransaksiController::index', ['filter' => 'auth']);
 
 // $routes->get('produk', 'ProdukController::index', ['filter' => 'auth']);

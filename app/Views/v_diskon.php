@@ -1,150 +1,114 @@
 <?= $this->extend('layout') ?>
+
+<?= $this->section('title') ?>
+<?= $title ?>
+<?= $this->endSection() ?>
+
 <?= $this->section('content') ?>
-
-<!-- Flash Messages -->
-<?php if (session()->getFlashData('success')) : ?>
-<div class="alert alert-info alert-dismissible fade show" role="alert">
-    <?= esc(session()->getFlashData('success')) ?>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-<?php endif; ?>
-
-<?php if (session()->getFlashData('failed')) : ?>
-<div class="alert alert-danger alert-dismissible fade show" role="alert">
-    <?= esc(session()->getFlashData('failed')) ?>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-<?php endif; ?>
-
-<!-- Discount Info Display (if exists in session) -->
-<?php if (session()->get('discount')): ?>
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-    <i class="bi bi-gift"></i> 
-    Diskon Hari Ini: Rp <?= number_format(session()->get('discount'), 0, ',', '.') ?>
-    <small>(<?= session()->get('discount_date') ?>)</small>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-<?php endif; ?>
-
-<!-- Main Content -->
-<div class="row">
-    <div class="col-12">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="card-title">Data Diskon</h5>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDiskonModal">
-                <i class="bi bi-plus"></i> Tambah Data
-            </button>
-        </div>
-        
-        <!-- Success/Error Messages -->
-        <?php if (session()->getFlashdata('success')): ?>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <?= session()->getFlashdata('success') ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        <?php endif; ?>
-        
-        <?php if (session()->getFlashdata('error')): ?>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <?= session()->getFlashdata('error') ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        <?php endif; ?>
-
-        <!-- Entries per page selector -->
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <div class="dataTables_length">
-                    <label>
-                        <select class="form-select form-select-sm" style="width: auto; display: inline-block;">
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                        </select>
-                        entries per page
-                    </label>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="card-title"><?= $title ?></h3>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
+                        <i class="fas fa-plus"></i> Tambah Diskon
+                    </button>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="dataTables_filter text-end">
-                    <label>
-                        Search: <input type="search" class="form-control form-control-sm" style="width: auto; display: inline-block;" placeholder="">
-                    </label>
-                </div>
-            </div>
-        </div>
-
-        <!-- Discount Table -->
-        <div class="table-responsive">
-            <table class="table table-striped table-hover datatable">
-                <thead class="table-dark">
-                    <tr>
-                        <th>#</th>
-                        <th>Tanggal</th>
-                        <th>Nominal (Rp)</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (!empty($diskons)): ?>
-                        <?php $no = 1; foreach ($diskons as $diskon): ?>
-                        <tr>
-                            <td><?= $no++ ?></td>
-                            <td><?= date('Y-m-d', strtotime($diskon['tanggal'])) ?></td>
-                            <td><?= number_format($diskon['nominal'], 0, ',', '.') ?></td>
-                            <td>
-                                <button type="button" class="btn btn-sm btn-success" 
-                                        onclick="editDiskon(<?= $diskon['id'] ?>, '<?= $diskon['tanggal'] ?>', <?= $diskon['nominal'] ?>)">
-                                    Ubah
-                                </button>
-                                <a href="<?= base_url('/diskon/delete/' . $diskon['id']) ?>" 
-                                   class="btn btn-sm btn-danger"
-                                   onclick="return confirm('Yakin ingin menghapus diskon ini?')">
-                                    Hapus
-                                </a>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="4" class="text-center">Tidak ada data diskon</td>
-                        </tr>
+                <div class="card-body">
+                    <?php if (session()->getFlashdata('success')): ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <?= session()->getFlashdata('success') ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
                     <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
 
-        <!-- Pagination info -->
-        <div class="row mt-3">
-            <div class="col-md-6">
-                <div class="dataTables_info">
-                    Showing 1 to <?= count($diskons ?? []) ?> of <?= count($diskons ?? []) ?> entries
+                    <?php if (session()->getFlashdata('error')): ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <?= session()->getFlashdata('error') ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    <?php endif; ?>
+
+                    <?php if (session()->getFlashdata('errors')): ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <ul class="mb-0">
+                            <?php foreach (session()->getFlashdata('errors') as $error): ?>
+                            <li><?= $error ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    <?php endif; ?>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Tanggal</th>
+                                    <th>Nominal</th>
+                                    <th>Created At</th>
+                                    <th>Updated At</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if (empty($diskons)): ?>
+                                <tr>
+                                    <td colspan="6" class="text-center">Tidak ada data diskon</td>
+                                </tr>
+                                <?php else: ?>
+                                <?php foreach ($diskons as $index => $diskon): ?>
+                                <tr>
+                                    <td><?= $index + 1 ?></td>
+                                    <td><?= date('d/m/Y', strtotime($diskon['tanggal'])) ?></td>
+                                    <td>Rp <?= number_format($diskon['nominal'], 0, ',', '.') ?></td>
+                                    <td><?= date('d/m/Y H:i:s', strtotime($diskon['created_at'])) ?></td>
+                                    <td><?= date('d/m/Y H:i:s', strtotime($diskon['updated_at'])) ?></td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-sm btn-warning" 
+                                                onclick="editDiskon('<?= $diskon['id'] ?>', '<?= $diskon['tanggal'] ?>', '<?= $diskon['nominal'] ?>')">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-danger"
+                                                onclick="confirmDelete('<?= $diskon['id'] ?>', '<?= date('d/m/Y', strtotime($diskon['tanggal'])) ?>')">
+                                                <i class="fas fa-trash"></i> Hapus
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Add Diskon Modal -->
-<div class="modal fade" id="addDiskonModal" tabindex="-1">
+<!-- Create Modal -->
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="<?= base_url('/diskon/store') ?>" method="post">
+            <form action="<?= base_url('diskon/store') ?>" method="post">
                 <?= csrf_field() ?>
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Diskon Baru</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title" id="createModalLabel">Tambah Diskon</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="tanggal" class="form-label">Tanggal</label>
-                        <input type="date" class="form-control" id="tanggal" name="tanggal" required>
+                        <label for="create_tanggal" class="form-label">Tanggal</label>
+                        <input type="date" class="form-control" id="create_tanggal" name="tanggal" required>
                     </div>
                     <div class="mb-3">
-                        <label for="nominal" class="form-label">Nominal Diskon</label>
-                        <input type="number" class="form-control" id="nominal" name="nominal" 
-                               placeholder="Masukkan nominal diskon" required min="1">
+                        <label for="create_nominal" class="form-label">Nominal Diskon</label>
+                        <input type="number" class="form-control" id="create_nominal" name="nominal" 
+                               placeholder="Masukkan nominal diskon" min="1" required>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -156,26 +120,26 @@
     </div>
 </div>
 
-<!-- Edit Diskon Modal -->
-<div class="modal fade" id="editDiskonModal" tabindex="-1">
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="" method="post" id="editForm">
+            <form action="#" method="post" id="editForm">
                 <?= csrf_field() ?>
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Diskon</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title" id="editModalLabel">Edit Diskon</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="edit_tanggal" class="form-label">Tanggal</label>
                         <input type="date" class="form-control" id="edit_tanggal" name="tanggal" readonly>
-                        <small class="text-muted">Tanggal tidak dapat diubah</small>
+                        <small class="form-text text-muted">Tanggal tidak dapat diubah</small>
                     </div>
                     <div class="mb-3">
                         <label for="edit_nominal" class="form-label">Nominal Diskon</label>
                         <input type="number" class="form-control" id="edit_nominal" name="nominal" 
-                               placeholder="Masukkan nominal diskon" required min="1">
+                               placeholder="Masukkan nominal diskon" min="1" required>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -187,47 +151,47 @@
     </div>
 </div>
 
-<?= $this->endSection() ?>
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Apakah Anda yakin ingin menghapus diskon untuk tanggal <span id="deleteDateText"></span>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <a href="#" id="deleteConfirmBtn" class="btn btn-danger">Hapus</a>
+            </div>
+        </div>
+    </div>
+</div>
 
-<?= $this->section('script') ?>
 <script>
-    function editDiskon(id, tanggal, nominal) {
-        document.getElementById('edit_tanggal').value = tanggal;
-        document.getElementById('edit_nominal').value = nominal;
-        document.getElementById('editForm').action = '<?= base_url('/diskon/update/') ?>' + id;
-        
-        var editModal = new bootstrap.Modal(document.getElementById('editDiskonModal'));
-        editModal.show();
-    }
+function editDiskon(id, tanggal, nominal) {
+    document.getElementById('edit_tanggal').value = tanggal;
+    document.getElementById('edit_nominal').value = nominal;
+    document.getElementById('editForm').action = '<?= base_url('diskon/update/') ?>' + id;
 
-    // Auto-dismiss alerts after 5 seconds
-    setTimeout(function() {
-        var alerts = document.querySelectorAll('.alert');
-        alerts.forEach(function(alert) {
-            var bsAlert = new bootstrap.Alert(alert);
-            bsAlert.close();
-        });
-    }, 5000);
+    var editModal = new bootstrap.Modal(document.getElementById('editModal'));
+    editModal.show();
+}
 
-    // Initialize DataTable if needed
-    $(document).ready(function() {
-        if (typeof $.fn.DataTable !== 'undefined') {
-            $('.datatable').DataTable({
-                "pageLength": 10,
-                "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
-                "language": {
-                    "search": "Search:",
-                    "lengthMenu": "_MENU_ entries per page",
-                    "info": "Showing _START_ to _END_ of _TOTAL_ entries",
-                    "paginate": {
-                        "first": "First",
-                        "last": "Last",
-                        "next": "Next",
-                        "previous": "Previous"
-                    }
-                }
-            });
-        }
-    });
+function confirmDelete(id, tanggal) {
+    document.getElementById('deleteDateText').textContent = tanggal;
+    document.getElementById('deleteConfirmBtn').href = '<?= base_url('diskon/delete/') ?>' + id;
+
+    var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    deleteModal.show();
+}
+
+// Reset form when create modal is closed
+document.getElementById('createModal').addEventListener('hidden.bs.modal', function () {
+    document.getElementById('create_tanggal').value = '';
+    document.getElementById('create_nominal').value = '';
+});
 </script>
 <?= $this->endSection() ?>

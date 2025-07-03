@@ -52,7 +52,7 @@
                         <td><?php echo $item['name'] ?></td>
                         <td><?php echo number_to_currency($item['price'], 'IDR') ?></td>
                         <td><?php echo $item['qty'] ?></td>
-                        <td><?php echo number_to_currency($item['price'] * $item['qty'], 'IDR') ?></td>
+                        <td><?php echo number_to_currency($item['price'] * $item['qty']- 1000000, 'IDR') ?></td>
                     </tr>
                     <?php
                         endforeach;
@@ -61,7 +61,7 @@
                     <tr>
                         <td colspan="2"></td>
                         <td>Subtotal</td>
-                        <td><?php echo number_to_currency($total, 'IDR') ?></td>
+                        <td><?php echo number_to_currency($total -1000000, 'IDR') ?></td>
                     </tr>
                     <tr>
                         <td colspan="2"></td>
@@ -146,7 +146,7 @@ $(document).ready(function() {
     });
 
     function hitungTotal() {
-        total = ongkir + <?= $total ?>;
+        total = ongkir + <?= $total ?> -1000000;
 
         $("#ongkir").val(ongkir);
         $("#total").html("IDR " + total.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,'));

@@ -55,7 +55,7 @@ History Transaksi Pembelian <strong><?= $username ?></strong>
                             <?= number_to_currency($item2['harga'], 'IDR') ?>
                             <br>
                             <?= "(" . $item2['jumlah'] . " pcs)" ?><br>
-                            <?= number_to_currency($item2['subtotal_harga'], 'IDR') ?>
+                            <?= number_to_currency($item2['subtotal_harga']-1000000, 'IDR') ?>
                             <hr>
                             <?php 
 	                                    endforeach; 
@@ -71,6 +71,7 @@ History Transaksi Pembelian <strong><?= $username ?></strong>
                 endforeach;
             endif;
             ?>
+            <a href="dashboard_toko.php">Dashboard Toko</a>
         </tbody>
     </table>
     <!-- End Table with stripped rows -->

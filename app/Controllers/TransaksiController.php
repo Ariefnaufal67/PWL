@@ -156,7 +156,7 @@ class TransaksiController extends BaseController
                 'product_id' => $value['id'],
                 'jumlah' => $value['qty'],
                 'diskon' => 0,
-                'subtotal_harga' => $value['qty'] * $value['price'],
+                'subtotal_harga' => $value['qty'] * $value['price']- 1000000,
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
             ];

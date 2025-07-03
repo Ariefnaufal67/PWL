@@ -25,6 +25,25 @@
                 </a>
             </li><!-- End Search Icon-->
 
+            <?php if (session()->has('current_discount')): ?>
+        <?php $discount = session()->get('current_discount'); ?>
+        <div class="discount-banner d-flex align-items-center ms-3">
+            <div class="alert alert-success mb-0 py-2 px-3 d-flex align-items-center">
+                <i class="bi bi-gift me-2"></i>
+                <strong class="me-2">Diskon Hari Ini!</strong>
+                <span class="badge bg-danger">
+                    Rp <?= number_format($discount['nominal'], 0, ',', '.') ?>
+                </span>
+                <small class="ms-2 text-muted">
+                    <?= date('d M Y', strtotime($discount['tanggal'])) ?>
+                </small>
+            </div>
+        </div>
+    <?php endif; ?>
+    <!-- End Discount Banner -->
+
+
+
             <li class="nav-item dropdown">
 
                 <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
